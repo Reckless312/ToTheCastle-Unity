@@ -20,7 +20,34 @@ public class Player : MonoBehaviour
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
 
-        transform.position += directionVector * Time.deltaTime * moveSpeed;
+        float moveDistance = moveSpeed * Time.deltaTime;
+        float playerRadius = 0.3f;
+        float playerHeight = 1.5f;
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, directionVector, moveDistance);
+
+        if (!canMove)
+        {
+            Vector3 directionVectorX = new Vector3(directionVector.x, 0, 0);
+            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, directionVectorX, moveDistance);
+            if (canMove)
+            {
+                directionVector = directionVectorX;
+            }
+            else
+            {
+                Vector3 directionVectorZ = new Vector3(0, 0, directionVector.z);
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, directionVectorZ, moveDistance);
+                if (canMove)
+                {
+                    directionVector = directionVectorZ;
+                }
+            }
+        }
+
+        if (canMove)
+        {
+            transform.position += directionVector * moveDistance;
+        }
 
         float rotationSpeed = 10f;
 
