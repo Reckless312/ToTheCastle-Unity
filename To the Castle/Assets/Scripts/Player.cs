@@ -8,13 +8,53 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform playerObject;
     [SerializeField] private ThirdPersonCamera thirdPersonCamera;
+    [SerializeField] private LayerMask gateLayerMask;
 
     [SerializeField] private float moveSpeed = 5f;
+
+    private Vector3 lastInteractDirection;
 
     private bool isWalking;
     private bool isRunning;
 
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnRunAction += GameInput_OnRunAction;
+    }
+
+    private void GameInput_OnRunAction(object sender, System.EventArgs e)
+    {
+        isRunning = !isRunning && isWalking;
+        moveSpeed = isRunning ? 8f : 5f;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
+
+        if (directionVector != Vector3.zero)
+        {
+            lastInteractDirection = directionVector;
+        }
+
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, gateLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out MainGate mainGate))
+            {
+                mainGate.Interact();
+            }
+        }
+    }
+
     private void Update()
+    {
+        HandleMovement();
+    }
+
+    private void HandleMovement()
     {
         UpdateOrientation();
 
@@ -47,15 +87,6 @@ public class Player : MonoBehaviour
 
         if (canMove)
         {
-            if (isRunning)
-            {
-                moveSpeed = 10f;
-            }
-            else
-            {
-                moveSpeed = 5f;
-            }
-
             transform.position += directionVector * moveDistance;
         }
 
@@ -67,7 +98,6 @@ public class Player : MonoBehaviour
         }
 
         isWalking = inputVector != Vector2.zero;
-        isRunning = isWalking && gameInput.IsRunningButtonPressed();
     }
 
     public bool IsWalking()
