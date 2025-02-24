@@ -17,4 +17,9 @@ public class GameInput : MonoBehaviour
 
         return inputVector;
     }
+
+    public bool IsRunningButtonPressed()
+    {
+        return playerInputActions.Player.Run.ReadValue<float>() > 0;
+    }
 }

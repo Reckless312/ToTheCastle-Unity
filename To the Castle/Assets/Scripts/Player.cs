@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
 
     private bool isWalking;
+    private bool isRunning;
 
     private void Update()
     {
@@ -46,6 +47,15 @@ public class Player : MonoBehaviour
 
         if (canMove)
         {
+            if (isRunning)
+            {
+                moveSpeed = 10f;
+            }
+            else
+            {
+                moveSpeed = 5f;
+            }
+
             transform.position += directionVector * moveDistance;
         }
 
@@ -57,11 +67,17 @@ public class Player : MonoBehaviour
         }
 
         isWalking = inputVector != Vector2.zero;
+        isRunning = isWalking && gameInput.IsRunningButtonPressed();
     }
 
     public bool IsWalking()
     {
         return isWalking;
+    }
+
+    public bool IsRunning()
+    {
+        return isRunning;
     }
 
     private void UpdateOrientation()
