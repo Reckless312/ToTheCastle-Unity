@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
         }
 
         isWalking = inputVector != Vector2.zero;
+        isRunning = isRunning && inputVector != Vector2.zero;
     }
 
     public bool IsWalking()
