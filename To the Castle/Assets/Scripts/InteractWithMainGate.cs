@@ -6,6 +6,6 @@ public class MainGate : MonoBehaviour
 
     public void Interact()
     {
-        sceneController.NextArea();
+        sceneController.ChangeArea();
     }
 }

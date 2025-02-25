@@ -3,8 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public void NextArea()
+    public void ChangeArea()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if(sceneIndex == 0)
+        {
+            SceneManager.LoadScene(sceneIndex + 1);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneIndex - 1);
+        }
     }
 }
