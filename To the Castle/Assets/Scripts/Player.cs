@@ -9,13 +9,22 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform playerObject;
     [SerializeField] private ThirdPersonCamera thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
+    [SerializeField] private GameObject stepRayUpper;
+    [SerializeField] private GameObject stepRayLower;
 
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float stepHeight = 0.3f;
+    [SerializeField] private float stepSmooth = 0.1f;
 
     private Vector3 lastInteractDirection;
 
     private bool isWalking;
     private bool isRunning;
+
+    private void Awake()
+    {
+        stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
+    }
 
     private void Start()
     {
@@ -52,6 +61,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         HandleMovement();
+        HandleStairs();
     }
 
     private void HandleMovement()
@@ -99,6 +109,20 @@ public class Player : MonoBehaviour
 
         isWalking = inputVector != Vector2.zero;
         isRunning = isRunning && inputVector != Vector2.zero;
+    }
+
+    private void HandleStairs()
+    {
+        float stepDistance = 0.1f;
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitLower, stepDistance))
+        {
+            Debug.Log("Lower hit");
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitUpper, stepDistance + 0.1f))
+            {
+                Debug.Log("Upper did not hit");
+                transform.position += new Vector3(0, +stepHeight, 0);
+            }
+        }
     }
 
     public bool IsWalking()
