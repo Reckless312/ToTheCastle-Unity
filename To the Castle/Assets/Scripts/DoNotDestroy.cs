@@ -4,7 +4,7 @@ public class DoNotDestroy : MonoBehaviour
 {
     [SerializeField] private int objectIndex = 0;
 
-    private static GameObject[] persistentObjects = new GameObject[3];
+    private static GameObject[] persistentObjects = new GameObject[5];
 
     private void Awake()
     {
