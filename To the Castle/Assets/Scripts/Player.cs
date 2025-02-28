@@ -1,67 +1,68 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    [Header("Game Objects References")]
+
     [SerializeField] private GameInput gameInput;
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform playerObject;
     [SerializeField] private ThirdPersonCamera thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
+    [SerializeField] private LayerMask groundMask;
     [SerializeField] private GameObject stepRayUpper;
     [SerializeField] private GameObject stepRayLower;
 
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("Player Settings")]
+
+    [SerializeField] private float playerHeight = 1.5f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float runSpeed = 5f;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float jumpCooldown = 0.25f;
+    [SerializeField] private float airMultiplier = 0.4f;
     [SerializeField] private float stepHeight = 0.3f;
     [SerializeField] private float stepSmooth = 0.1f;
+    [SerializeField] private float groundDrag = 5f;
+
+    [Header("Player State")]
+
+    private Rigidbody rigitBody;
 
     private Vector3 lastInteractDirection;
 
+    private float playerSpeed;
+
     private bool isWalking;
     private bool isRunning;
+    private bool isGrounded;
+    private bool isReadyToJump = true;
 
     private void Awake()
     {
         stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
+        playerSpeed = moveSpeed;
     }
 
     private void Start()
     {
+        rigitBody = GetComponent<Rigidbody>();
+        rigitBody.freezeRotation = true;
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnRunAction += GameInput_OnRunAction;
-    }
-
-    private void GameInput_OnRunAction(object sender, System.EventArgs e)
-    {
-        isRunning = !isRunning && isWalking;
-        moveSpeed = isRunning ? 8f : 5f;
-    }
-
-    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
-    {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-        Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
-
-        if (directionVector != Vector3.zero)
-        {
-            lastInteractDirection = directionVector;
-        }
-
-        float interactDistance = 2f;
-        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, gateLayerMask))
-        {
-            if (raycastHit.transform.TryGetComponent(out MainGate mainGate))
-            {
-                mainGate.Interact();
-            }
-        }
+        gameInput.OnJumpAction += GameInput_OnJumpAction;
     }
 
     private void Update()
     {
+        IsGrounded();
         HandleMovement();
-        HandleStairs();
+        HandleDrag();
+        SpeedControl();
+        //HandleStairs();
     }
 
     private void HandleMovement()
@@ -71,9 +72,8 @@ public class Player : MonoBehaviour
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
 
-        float moveDistance = moveSpeed * Time.deltaTime;
+        float moveDistance = playerSpeed * Time.deltaTime;
         float playerRadius = 0.3f;
-        float playerHeight = 1.5f;
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, directionVector, moveDistance);
 
         if (!canMove)
@@ -97,7 +97,15 @@ public class Player : MonoBehaviour
 
         if (canMove)
         {
-            transform.position += directionVector * moveDistance;
+            float speedMultiplier = 10f;
+            if (isGrounded)
+            {
+                rigitBody.AddForce(directionVector * playerSpeed * speedMultiplier, ForceMode.Force);
+            }
+            else
+            {
+                rigitBody.AddForce(directionVector * playerSpeed * speedMultiplier * airMultiplier, ForceMode.Force);
+            }
         }
 
         float rotationSpeed = 10f;
@@ -111,9 +119,15 @@ public class Player : MonoBehaviour
         isRunning = isRunning && inputVector != Vector2.zero;
     }
 
+    private void UpdateOrientation()
+    {
+        Vector3 thirdPersonCameraPosition = thirdPersonCamera.transform.position;
+        orientation.forward = (transform.position - new Vector3(thirdPersonCameraPosition.x, transform.position.y, thirdPersonCameraPosition.z)).normalized;
+    }
+
     private void HandleStairs()
     {
-        float stepDistance = 0.1f;
+        float stepDistance = 1f;
         if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitLower, stepDistance))
         {
             Debug.Log("Lower hit");
@@ -125,6 +139,83 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HandleDrag()
+    {
+        if (isGrounded)
+        {
+            rigitBody.linearDamping = groundDrag;
+        }
+        else
+        {
+            rigitBody.linearDamping = 0;
+        }
+    }
+
+    private void Jump()
+    {
+        rigitBody.angularVelocity = new Vector3(rigitBody.angularVelocity.x, 0, rigitBody.angularVelocity.z);
+        rigitBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void ResetJump()
+    {
+        isReadyToJump = true;
+    }
+
+    private void GameInput_OnRunAction(object sender, System.EventArgs e)
+    {
+        isRunning = !isRunning && isWalking;
+        playerSpeed = isRunning ? runSpeed : moveSpeed;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
+
+        if (directionVector != Vector3.zero)
+        {
+            lastInteractDirection = directionVector;
+        }
+
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, gateLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out MainGate mainGate))
+            {
+                mainGate.Interact();
+            }
+        }
+    }
+
+    private void GameInput_OnJumpAction(object sender, System.EventArgs e)
+    {
+        if (isReadyToJump && isGrounded)
+        {
+            isReadyToJump = false;
+            Jump();
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
+    }
+
+    private void SpeedControl()
+    {
+        Vector3 flatVelocity = new Vector3(rigitBody.linearVelocity.x, 0, rigitBody.linearVelocity.z);
+        if (flatVelocity.magnitude > playerSpeed)
+        {
+            Vector3 limitedVelocity = flatVelocity.normalized * playerSpeed;
+            rigitBody.linearVelocity = new Vector3(limitedVelocity.x, rigitBody.linearVelocity.y, limitedVelocity.z);
+        }
+    }
+
+    private void IsGrounded()
+    {
+        float raycastDistance = 0.2f;
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, raycastDistance, groundMask);
+    }
+
+
+
     public bool IsWalking()
     {
         return isWalking;
@@ -133,11 +224,5 @@ public class Player : MonoBehaviour
     public bool IsRunning()
     {
         return isRunning;
-    }
-
-    private void UpdateOrientation()
-    {
-        Vector3 thirdPersonCameraPosition = thirdPersonCamera.transform.position;
-        orientation.forward = (transform.position - new Vector3(thirdPersonCameraPosition.x, transform.position.y, thirdPersonCameraPosition.z)).normalized;
     }
 }

@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
     public event EventHandler OnInteractAction;
     public event EventHandler OnRunAction;
+    public event EventHandler OnJumpAction;
 
     private PlayerInputActions playerInputActions;
 
@@ -14,7 +16,16 @@ public class GameInput : MonoBehaviour
         playerInputActions.Player.Enable();
 
         playerInputActions.Player.Interact.performed += InteractPerformed;
+
         playerInputActions.Player.Run.performed += RunPerformed;
+        playerInputActions.Player.Run.canceled += RunPerformed;
+
+        playerInputActions.Player.Jump.performed += JumpPerformed;
+    }
+
+    private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnJumpAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void InteractPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -34,10 +45,5 @@ public class GameInput : MonoBehaviour
         inputVector = inputVector.normalized;
 
         return inputVector;
-    }
-
-    public bool IsRunningButtonPressed()
-    {
-        return playerInputActions.Player.Run.ReadValue<float>() > 0;
     }
 }
