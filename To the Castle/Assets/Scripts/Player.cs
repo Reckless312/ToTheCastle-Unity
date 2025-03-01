@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private ThirdPersonCamera thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask levelMask;
     [SerializeField] private GameObject stepRayUpper;
     [SerializeField] private GameObject stepRayLower;
 
@@ -129,14 +130,22 @@ public class Player : MonoBehaviour
 
     private void HandleStairs()
     {
-        float stepDistance = 1f;
-        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitLower, stepDistance))
+        StepClimb(orientation.forward);
+        StepClimb(orientation.forward + new Vector3(1.5f, 0, 0));
+        StepClimb(orientation.forward + new Vector3(-1.5f, 0, 0));
+    }
+
+    private void StepClimb(Vector3 Angle)
+    {
+        float stepDistance = 0.2f;
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Angle), out RaycastHit hitLower, stepDistance, levelMask))
         {
             Debug.Log("Lower hit");
-            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hitUpper, stepDistance + 0.1f))
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Angle), out RaycastHit hitUpper, stepDistance + 0.1f, levelMask))
             {
                 Debug.Log("Upper did not hit");
-                transform.position += new Vector3(0, +stepHeight, 0);
+                isGrounded = true;
+                rigitBody.position += new Vector3(0, stepSmooth, 0);
             }
         }
     }
