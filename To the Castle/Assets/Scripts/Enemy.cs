@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     private bool alreadyAttacked;
     private bool playerInSightRange;
     private bool playerInAttackRange;
+    private bool isWalking;
 
     private void Awake()
     {
@@ -38,7 +39,7 @@ public class Enemy : MonoBehaviour
 
     private void Patrolling()
     {
-        if(!walkPointSet) SearchWalkPoint();
+        if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
             meshAgent.SetDestination(walkPoint);
@@ -47,6 +48,8 @@ public class Enemy : MonoBehaviour
 
         if(distanceToWalkPoint.magnitude < 1f)
             walkPointSet = false;
+        else
+            isWalking = true;
     }
 
     private void SearchWalkPoint()
@@ -59,10 +62,13 @@ public class Enemy : MonoBehaviour
     private void ChasePlayer()
     {
         meshAgent.SetDestination(player.position);
+        isWalking = true;
     }
 
     private void AttackPlayer()
     {
+        isWalking = false;
+
         meshAgent.SetDestination(transform.position);
         
         transform.LookAt(player);
@@ -72,6 +78,11 @@ public class Enemy : MonoBehaviour
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
     }
 
     private void ResetAttack()
