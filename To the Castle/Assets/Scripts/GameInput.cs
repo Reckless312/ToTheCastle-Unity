@@ -7,6 +7,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnInteractAction;
     public event EventHandler OnRunAction;
     public event EventHandler OnJumpAction;
+    public event EventHandler OnAttackAction;
 
     private PlayerInputActions playerInputActions;
 
@@ -21,6 +22,13 @@ public class GameInput : MonoBehaviour
         playerInputActions.Player.Run.canceled += RunPerformed;
 
         playerInputActions.Player.Jump.performed += JumpPerformed;
+
+        playerInputActions.Player.Attack.performed += AttackPerformed;
+    }
+
+    private void AttackPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnAttackAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
