@@ -128,6 +128,7 @@ public class Player : MonoBehaviour
         orientation.forward = (transform.position - new Vector3(thirdPersonCameraPosition.x, transform.position.y, thirdPersonCameraPosition.z)).normalized;
     }
 
+    //Function is not used -> Stairs simulate a slope
     private void HandleStairs()
     {
         StepClimb(orientation.forward);
