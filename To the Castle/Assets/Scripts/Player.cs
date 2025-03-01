@@ -18,15 +18,15 @@ public class Player : MonoBehaviour
 
     [Header("Player Settings")]
 
-    [SerializeField] private float playerHeight = 1.5f;
+    [SerializeField] private float playerHeight = 1.75f;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float jumpCooldown = 0.25f;
-    [SerializeField] private float airMultiplier = 0.4f;
+    [SerializeField] private float jumpCooldown = 1.1f;
+    [SerializeField] private float airMultiplier = 0.5f;
     [SerializeField] private float stepHeight = 0.3f;
     [SerializeField] private float stepSmooth = 0.1f;
-    [SerializeField] private float groundDrag = 5f;
+    [SerializeField] private float groundDrag = 2f;
 
     [Header("Player State")]
 
@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     private bool isWalking;
     private bool isRunning;
     private bool isGrounded;
+    private bool hasJumped;
+    private bool isInAir;
     private bool isReadyToJump = true;
 
     private void Awake()
@@ -160,6 +162,7 @@ public class Player : MonoBehaviour
     private void ResetJump()
     {
         isReadyToJump = true;
+        hasJumped = false;
     }
 
     private void GameInput_OnRunAction(object sender, System.EventArgs e)
@@ -192,6 +195,7 @@ public class Player : MonoBehaviour
     {
         if (isReadyToJump && isGrounded)
         {
+            hasJumped = true;
             isReadyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -214,7 +218,23 @@ public class Player : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, raycastDistance, groundMask);
     }
 
+    public bool IsInAir()
+    {
+        if (isGrounded && isReadyToJump)
+        {
+            isInAir = false;
+        }
+        else
+        {
+            isInAir = true;
+        }
+        return isInAir;
+    }
 
+    public bool HasJumped()
+    {
+        return hasJumped;
+    }
 
     public bool IsWalking()
     {
