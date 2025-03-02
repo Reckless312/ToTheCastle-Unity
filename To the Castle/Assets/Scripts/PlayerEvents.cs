@@ -1,0 +1,80 @@
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.Playables;
+
+public class PlayerEvents : MonoBehaviour
+{
+    [Header("Game Objects References")]
+
+    [SerializeField] private GameInput gameInput;
+    [SerializeField] private Transform orientation;
+    [SerializeField] private Transform thirdPersonCamera;
+    [SerializeField] private LayerMask gateLayerMask;
+
+    [Header("Hierarchy References")]
+
+    private PlayerState playerState;
+
+    [Header("Player State")]
+
+    private Vector3 lastInteractDirection;
+
+    private void Awake()
+    {
+        playerState = GetComponent<PlayerState>();
+    }
+
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnRunAction += GameInput_OnRunAction;
+        gameInput.OnJumpAction += GameInput_OnJumpAction;
+    }
+
+    private void Update()
+    {
+        UpdateOrientationBasedOnCamera();
+        playerState.UpdateStateBasedOnInput(gameInput.GetMovementVectorNormalized());
+    }
+
+    private void GameInput_OnRunAction(object sender, System.EventArgs e)
+    {
+        playerState.HandleRunningStateChange();
+    }
+
+    private void GameInput_OnJumpAction(object sender, System.EventArgs e)
+    {
+        playerState.HandleJumpingState();
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector3 directionVector = GetDirectionVector();
+
+        if (directionVector != Vector3.zero)
+        {
+            lastInteractDirection = directionVector;
+        }
+
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, gateLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out MainGate mainGate))
+            {
+                mainGate.Interact();
+            }
+        }
+    }
+
+    private void UpdateOrientationBasedOnCamera()
+    {
+        orientation.forward = (transform.position - new Vector3(thirdPersonCamera.position.x, transform.position.y, thirdPersonCamera.position.z)).normalized;
+    }
+
+    public Vector3 GetDirectionVector()
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
+        return directionVector;
+    }
+}
