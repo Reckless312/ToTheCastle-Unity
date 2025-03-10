@@ -614,19 +614,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d14108a0df1e9b845b3c831e7883bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshAgent: {fileID: 123651405}
   player: {fileID: 300632678}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 8
   whatIsPlayer:
-    serializedVersion: 2
     m_Bits: 256
-  walkPointRange: 5
   timeBetweenAttacks: 0.5
-  sightRange: 20
-  attackRange: 12
   walkPoint: {x: 0, y: 0, z: 0}
+  alreadyAttacked: 0
+  isWalking: 0
 --- !u!195 &123651405
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -662,6 +656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 123651404}
+  animator: {fileID: 0}
 --- !u!136 &123651409
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7989,6 +7984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameInput: {fileID: 698988031}
   attackCooldown: 2.2
+  isAttacking: 0
 --- !u!4 &1861853749
 Transform:
   m_ObjectHideFlags: 0

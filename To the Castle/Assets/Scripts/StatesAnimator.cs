@@ -8,13 +8,19 @@ public class StatesAnimator : MonoBehaviour
     private const string HAS_JUMPED = "HasJumped";
     private const string IS_ATTACKING = "IsAttacking";
 
-    [SerializeField] private IEntityState IState;
+    [SerializeField] private MonoBehaviour component;
 
     private Animator animator;
+    private IEntityState IState;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        IState = component as IEntityState;
+        if(IState == null)
+        {
+            Debug.LogError("Component does not implement IEntityState");
+        }
     }
 
     void Update()
