@@ -29,6 +29,7 @@ public class PlayerEvents : MonoBehaviour
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnRunAction += GameInput_OnRunAction;
         gameInput.OnJumpAction += GameInput_OnJumpAction;
+        gameInput.OnAttackAction += GameInput_OnAttackAction;
     }
 
     private void Update()
@@ -45,6 +46,11 @@ public class PlayerEvents : MonoBehaviour
     private void GameInput_OnJumpAction(object sender, System.EventArgs e)
     {
         playerState.HandleJumpingState();
+    }
+
+    private void GameInput_OnAttackAction(object sender, System.EventArgs e)
+    {
+        playerState.HandleAttacking();
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)

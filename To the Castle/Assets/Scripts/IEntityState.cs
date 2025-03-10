@@ -9,4 +9,10 @@ public interface IEntityState
     public bool IsJumping { get; }
 
     public bool IsGrounded { get; }
+
+    public bool IsAttacking { get; }
+
+    public bool HasJumped { get; }
+
+    public bool IsInAir();
 }

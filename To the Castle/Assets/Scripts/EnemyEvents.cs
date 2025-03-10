@@ -1,0 +1,29 @@
+using UnityEngine;
+
+public class EnemyEvents : MonoBehaviour
+{
+    [SerializeField] private LayerMask whatIsPlayer;
+
+    [SerializeField] private float sightRange;
+    [SerializeField] private float attackRange;
+
+    private EnemyActions enemyActions;
+
+    private bool playerInSightRange;
+    private bool playerInAttackRange;
+
+    private void Awake()
+    {
+        enemyActions = GetComponent<EnemyActions>();
+    }
+
+    private void Update()
+    {
+        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+
+        if (!playerInSightRange && !playerInAttackRange) enemyActions.Patrolling();
+        if (playerInSightRange && !playerInAttackRange) enemyActions.ChasePlayer();
+        if (playerInSightRange && playerInAttackRange) enemyActions.AttackPlayer();
+    }
+}

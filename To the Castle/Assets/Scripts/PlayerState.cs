@@ -12,6 +12,7 @@ public class PlayerState : MonoBehaviour, IEntityState
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpCooldown = 1.2f;
+    [SerializeField] private float attackCooldown = 2.2f;
 
     [Header("Player State")]
 
@@ -22,6 +23,7 @@ public class PlayerState : MonoBehaviour, IEntityState
     private bool hasJumped;
     private bool isInAir;
     private bool isReadyToJump;
+    private bool isAttacking;
 
     private void Awake()
     {
@@ -73,6 +75,12 @@ public class PlayerState : MonoBehaviour, IEntityState
         private set => isReadyToJump = value;
     }
 
+    public bool IsAttacking
+    {
+        get => isAttacking;
+        private set => isAttacking = value;
+    }
+
     public bool IsInAir()
     {
         if (isGrounded && isReadyToJump)
@@ -107,6 +115,20 @@ public class PlayerState : MonoBehaviour, IEntityState
             entityRigidBody.Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
+    }
+
+    public void HandleAttacking()
+    {
+        if (!isAttacking)
+        {
+            isAttacking = true;
+            Invoke(nameof(ResetAttack), attackCooldown);
+        }
+    }
+
+    private void ResetAttack()
+    {
+        isAttacking = false;
     }
 
     private void ResetJump()
