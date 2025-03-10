@@ -7,8 +7,8 @@ public class EnemyActions : MonoBehaviour
     [SerializeField] private NavMeshAgent meshAgent;
     [SerializeField] private LayerMask whatIsGround;
 
-    [SerializeField] private float walkPointRange;
-    [SerializeField] private float timeBetweenAttacks;
+    [SerializeField] private float walkPointRange = 5;
+    [SerializeField] private float timeBetweenAttacks = 0.5f;
 
     private EnemyState enemyState;
 
@@ -20,6 +20,7 @@ public class EnemyActions : MonoBehaviour
     private void Awake()
     {
         meshAgent = GetComponent<NavMeshAgent>();
+        enemyState = GetComponent<EnemyState>();
     }
 
     public void SearchWalkPoint()
