@@ -10,6 +10,7 @@ public class PlayerEvents : MonoBehaviour
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
+    [SerializeField] private GameOver gameOver;
 
     [Header("Hierarchy References")]
 
@@ -52,6 +53,7 @@ public class PlayerEvents : MonoBehaviour
             playerState.IsAlive = false;
             GetComponent<PlayerMovement>().enabled = false;
             gameInput.enabled = false;
+            gameOver.ShowGameOver();
         }
     }
 
@@ -91,6 +93,11 @@ public class PlayerEvents : MonoBehaviour
                 mainGate.Interact();
             }
         }
+    }
+
+    public bool IsPlayerAlive()
+    {
+        return playerState.IsAlive;
     }
 
     private void UpdateOrientationBasedOnCamera()

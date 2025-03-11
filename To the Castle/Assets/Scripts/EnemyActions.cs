@@ -60,7 +60,7 @@ public class EnemyActions : MonoBehaviour
         meshAgent.SetDestination(transform.position);
         transform.LookAt(playerEvents.transform);
 
-        if (!alreadyAttacked)
+        if (!alreadyAttacked && playerEvents.IsPlayerAlive())
         {
             enemyState.IsAttacking = true;
             playerEvents.HandleDamage(enemyState.Damage);
