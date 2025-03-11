@@ -110,7 +110,7 @@ MonoBehaviour:
   thirdPersonCamera: {fileID: 0}
   gateLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!114 &6987468718475604296
 MonoBehaviour:
   m_ObjectHideFlags: 0

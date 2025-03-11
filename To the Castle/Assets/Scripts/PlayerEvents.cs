@@ -38,6 +38,11 @@ public class PlayerEvents : MonoBehaviour
         playerState.UpdateStateBasedOnInput(gameInput.GetMovementVectorNormalized());
     }
 
+    public void HandleChangeAnimatorController(int indexScene)
+    {
+        playerState.ChangeAnimatorController(indexScene);
+    }
+
     private void GameInput_OnRunAction(object sender, System.EventArgs e)
     {
         playerState.HandleRunningStateChange();

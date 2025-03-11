@@ -5,6 +5,8 @@ public class PlayerState : MonoBehaviour, IEntityState
 {
     [Header("Hierarchy References")]
 
+    [SerializeField] private Animator playerCurrentAnimator;
+
     private EntityRigidBody entityRigidBody;
 
     [Header("Player Settings")]
@@ -13,6 +15,8 @@ public class PlayerState : MonoBehaviour, IEntityState
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpCooldown = 1.2f;
     [SerializeField] private float attackCooldown = 2.2f;
+    [SerializeField] private RuntimeAnimatorController exploringAnimatorController;
+    [SerializeField] private RuntimeAnimatorController combatAnimatorController;
 
     [Header("Player State")]
 
@@ -135,5 +139,10 @@ public class PlayerState : MonoBehaviour, IEntityState
     {
         isReadyToJump = true;
         hasJumped = false;
+    }
+
+    public void ChangeAnimatorController(int indexScene)
+    {
+        playerCurrentAnimator.runtimeAnimatorController = indexScene == 0 ? exploringAnimatorController : combatAnimatorController;
     }
 }
