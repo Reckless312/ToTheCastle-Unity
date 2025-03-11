@@ -38,9 +38,9 @@ public class PlayerEvents : MonoBehaviour
         playerState.UpdateStateBasedOnInput(gameInput.GetMovementVectorNormalized());
     }
 
-    public void HandleChangeAnimatorController(int indexScene)
+    public void HandleChangeAnimatorController(Loader.Scene newScene)
     {
-        playerState.ChangeAnimatorController(indexScene);
+        playerState.ChangeAnimatorController(newScene);
     }
 
     public void HandleDamage(float damage)

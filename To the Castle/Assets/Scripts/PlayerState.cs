@@ -190,9 +190,9 @@ public class PlayerState : MonoBehaviour, IEntityState
         hasJumped = false;
     }
 
-    public void ChangeAnimatorController(int indexScene)
+    public void ChangeAnimatorController(Loader.Scene newScene)
     {
-        playerCurrentAnimator.runtimeAnimatorController = indexScene == 0 ? exploringAnimatorController : combatAnimatorController;
+        playerCurrentAnimator.runtimeAnimatorController = newScene == Loader.Scene.CastleEntrance ? exploringAnimatorController : combatAnimatorController;
     }
 
     public void UpdateHealthBar()

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
@@ -9,8 +8,7 @@ public class SceneController : MonoBehaviour
     public void Start()
     {
         Canvas = DoNotDestroy.Canvas;
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if(sceneIndex == 0)
+        if(Loader.GetScene() == Loader.Scene.CastleEntrance)
         {
             Canvas.SetActive(false);
         }
@@ -18,19 +16,19 @@ public class SceneController : MonoBehaviour
 
     public void ChangeArea()
     {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         playerEvents = DoNotDestroy.PlayerEvents;
         Canvas = DoNotDestroy.Canvas;
-        if (sceneIndex == 0)
+
+        if (Loader.GetScene() == Loader.Scene.CastleEntrance)
         {
-            SceneManager.LoadScene(sceneIndex + 1);
-            playerEvents.HandleChangeAnimatorController(sceneIndex + 1);
+            Loader.Load(Loader.Scene.FirstFloor);
+            playerEvents.HandleChangeAnimatorController(Loader.Scene.FirstFloor);
             Canvas.SetActive(true);
         }
-        else
+        else if(Loader.GetScene() == Loader.Scene.FirstFloor)
         {
-            SceneManager.LoadScene(sceneIndex - 1);
-            playerEvents.HandleChangeAnimatorController(sceneIndex - 1);
+            Loader.Load(Loader.Scene.CastleEntrance);
+            playerEvents.HandleChangeAnimatorController(Loader.Scene.CastleEntrance);
             Canvas.SetActive(false);
         }
     }

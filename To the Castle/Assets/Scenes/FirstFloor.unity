@@ -8912,6 +8912,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 330607bfd08125049a54d3af17f3c569, type: 2}
     - target: {fileID: 9194339714457256431, guid: 8c934b7b2d6b58948bfa87458ee70d2a, type: 3}
+      propertyPath: gameOver
+      value: 
+      objectReference: {fileID: 1216116590}
+    - target: {fileID: 9194339714457256431, guid: 8c934b7b2d6b58948bfa87458ee70d2a, type: 3}
       propertyPath: gameInput
       value: 
       objectReference: {fileID: 698988031}

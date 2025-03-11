@@ -74,4 +74,12 @@ public class DoNotDestroy : MonoBehaviour
             return persistentObjects[ENEMY_OBJECT_INDEX].GetComponent<EnemyEvents>();
         }
     }
+
+    public static GameObject[] GameObjects
+    {
+        get
+        {
+            return persistentObjects;
+        }
+    }
 }
