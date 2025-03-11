@@ -11,6 +11,7 @@ public class EnemyActions : MonoBehaviour
 
     private PlayerEvents playerEvents;
     private EnemyState enemyState;
+    private GameStatus gameWon;
 
     public Vector3 walkPoint;
 
@@ -82,6 +83,8 @@ public class EnemyActions : MonoBehaviour
         {
             enemyState.IsAlive = false;
             GetComponent<EnemyEvents>().enabled = false;
+
+            playerEvents.GameFinished(true);
         }
         Debug.Log("Enemy Health: " + enemyState.Health);
     }

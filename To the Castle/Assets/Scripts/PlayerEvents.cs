@@ -10,7 +10,8 @@ public class PlayerEvents : MonoBehaviour
     [SerializeField] private Transform orientation;
     [SerializeField] private ThirdPersonCamera thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
-    [SerializeField] private GameOver gameOver;
+    [SerializeField] private GameStatus gameOver;
+    [SerializeField] private GameStatus gameWon;
 
     [Header("Hierarchy References")]
 
@@ -51,10 +52,23 @@ public class PlayerEvents : MonoBehaviour
         if(playerState.CurrentHealth <= 0)
         {
             playerState.IsAlive = false;
-            GetComponent<PlayerMovement>().enabled = false;
-            gameInput.ClearEvents();
-            thirdPersonCamera.UnlockCursor();
-            gameOver.ShowGameOver();
+            GameFinished(false);
+        }
+    }
+
+    public void GameFinished(bool won)
+    {
+        GetComponent<PlayerMovement>().enabled = false;
+        gameInput.ClearEvents();
+        thirdPersonCamera.UnlockCursor();
+
+        if (won)
+        {
+            gameWon.ShowStatus();
+        }
+        else
+        {
+            gameOver.ShowStatus();
         }
     }
 

@@ -11,11 +11,8 @@ public class DoNotDestroy : MonoBehaviour
     const int SCENE_CONTROLLER_OBJECT_INDEX = 3;
     const int CANVAS_OBJECT_INDEX = 4;
     const int ENEMY_OBJECT_INDEX = 5;
-    const int EVENT_SYSTEM_INDEX = 6;
 
-    const string EVENT_SYSTEM_NAME = "EventSystem";
-
-    //Last used index: 6;
+    //Last used index: 5;
     private static GameObject[] persistentObjects = new GameObject[10];
     private void Awake()
     {
@@ -90,7 +87,7 @@ public class DoNotDestroy : MonoBehaviour
     {
         foreach(GameObject gameObject in persistentObjects)
         {
-            if (gameObject != null && gameObject.name != EVENT_SYSTEM_NAME)
+            if(gameObject != null)
             {
                 Destroy(gameObject);
             }

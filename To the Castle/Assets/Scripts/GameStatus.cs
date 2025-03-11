@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class GameOver : MonoBehaviour
+public class GameStatus : MonoBehaviour
 {
-    private float timeToRestart = 3f;
+    private float timeToRestart = 5f;
 
     private void Awake()
     {
         ClearScreen();
     }
 
-    public void ShowGameOver()
+    public void ShowStatus()
     {
         gameObject.SetActive(true);
         Invoke("RestartGame", timeToRestart);
