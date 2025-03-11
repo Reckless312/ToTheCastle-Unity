@@ -11,12 +11,15 @@ public class PlayerState : MonoBehaviour, IEntityState
 
     [Header("Player Settings")]
 
+    [SerializeField] private RuntimeAnimatorController exploringAnimatorController;
+    [SerializeField] private RuntimeAnimatorController combatAnimatorController;
+    [SerializeField] private HealthBar healthBar;
+
+    [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpCooldown = 1.2f;
     [SerializeField] private float attackCooldown = 2.2f;
-    [SerializeField] private RuntimeAnimatorController exploringAnimatorController;
-    [SerializeField] private RuntimeAnimatorController combatAnimatorController;
 
     [Header("Player State")]
 
@@ -29,12 +32,20 @@ public class PlayerState : MonoBehaviour, IEntityState
     private bool isReadyToJump;
     private bool isAttacking;
 
+    private float currentHealth;
+
     private void Awake()
     {
         entityRigidBody = GetComponent<EntityRigidBody>();
         entityRigidBody.EntitySpeed = moveSpeed;
 
         isReadyToJump = true;
+        currentHealth = maxHealth;
+    }
+
+    private void Start()
+    {
+        healthBar.SetMaxValue(maxHealth);
     }
 
     private void Update()
