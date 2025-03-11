@@ -276,11 +276,6 @@ MonoBehaviour:
   m_Damping: 0
   m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
---- !u!4 &218514054 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1788030987363016448, guid: 895fba297ebf9944f99c243b40198670, type: 3}
-  m_PrefabInstance: {fileID: 7086289394902757479}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &224222601
 GameObject:
   m_ObjectHideFlags: 0
@@ -2178,7 +2173,7 @@ PrefabInstance:
     - target: {fileID: 9194339714457256431, guid: 8c934b7b2d6b58948bfa87458ee70d2a, type: 3}
       propertyPath: thirdPersonCamera
       value: 
-      objectReference: {fileID: 218514054}
+      objectReference: {fileID: 7086289394902757480}
     - target: {fileID: 9194339714457256431, guid: 8c934b7b2d6b58948bfa87458ee70d2a, type: 3}
       propertyPath: combatAnimatorController
       value: 
@@ -3066,6 +3061,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 218514052}
   m_SourcePrefab: {fileID: 100100000, guid: 895fba297ebf9944f99c243b40198670, type: 3}
+--- !u!114 &7086289394902757480 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9006760904402432018, guid: 895fba297ebf9944f99c243b40198670, type: 3}
+  m_PrefabInstance: {fileID: 7086289394902757479}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218514048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d401a4385d5ff641a78dac77bda7c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

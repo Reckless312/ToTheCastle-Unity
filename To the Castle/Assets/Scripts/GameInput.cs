@@ -46,6 +46,14 @@ public class GameInput : MonoBehaviour
         OnRunAction?.Invoke(this, EventArgs.Empty);
     }
 
+    public void ClearEvents()
+    {
+        OnInteractAction = null;
+        OnRunAction = null;
+        OnJumpAction = null;
+        OnAttackAction = null;
+    }
+
     public Vector2 GetMovementVectorNormalized()
     {
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();

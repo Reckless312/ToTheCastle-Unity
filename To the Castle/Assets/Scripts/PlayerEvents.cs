@@ -8,7 +8,7 @@ public class PlayerEvents : MonoBehaviour
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private Transform orientation;
-    [SerializeField] private Transform thirdPersonCamera;
+    [SerializeField] private ThirdPersonCamera thirdPersonCamera;
     [SerializeField] private LayerMask gateLayerMask;
     [SerializeField] private GameOver gameOver;
 
@@ -52,7 +52,8 @@ public class PlayerEvents : MonoBehaviour
         {
             playerState.IsAlive = false;
             GetComponent<PlayerMovement>().enabled = false;
-            gameInput.enabled = false;
+            gameInput.ClearEvents();
+            thirdPersonCamera.UnlockCursor();
             gameOver.ShowGameOver();
         }
     }
@@ -102,7 +103,7 @@ public class PlayerEvents : MonoBehaviour
 
     private void UpdateOrientationBasedOnCamera()
     {
-        orientation.forward = (transform.position - new Vector3(thirdPersonCamera.position.x, transform.position.y, thirdPersonCamera.position.z)).normalized;
+        orientation.forward = (transform.position - new Vector3(thirdPersonCamera.transform.position.x, transform.position.y, thirdPersonCamera.transform.position.z)).normalized;
     }
 
     public Vector3 GetDirectionVector()
