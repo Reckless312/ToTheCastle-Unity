@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
@@ -52,8 +53,6 @@ public class PlayerState : MonoBehaviour, IEntityState
     private void Start()
     {
         healthBar.SetMaxValue(maxHealth);
-
-        enemyEvents = DoNotDestroy.EnemyEvents;
     }
 
     private void Update()
@@ -160,6 +159,15 @@ public class PlayerState : MonoBehaviour, IEntityState
 
     public void HandleAttacking(bool hitEnemy)
     {
+        try
+        {
+            enemyEvents = DoNotDestroy.EnemyEvents;
+        }
+        catch(Exception e)
+        {
+            // We are in the first scene
+            Debug.Log(e);
+        }
         if (!isAttacking)
         {
             isAttacking = true;

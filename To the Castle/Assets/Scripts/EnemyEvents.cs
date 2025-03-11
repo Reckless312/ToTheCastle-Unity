@@ -5,7 +5,7 @@ public class EnemyEvents : MonoBehaviour
     [SerializeField] private LayerMask whatIsPlayer;
 
     [SerializeField] private float sightRange = 20;
-    [SerializeField] private float attackRange = 12;
+    [SerializeField] private float attackRange = 0.8f;
 
     private EnemyActions enemyActions;
 

@@ -7,7 +7,7 @@ public class EnemyActions : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
 
     [SerializeField] private float walkPointRange = 5;
-    [SerializeField] private float timeBetweenAttacks = 2.0f;
+    [SerializeField] private float timeBetweenAttacks = 2.6f;
 
     private PlayerEvents playerEvents;
     private EnemyState enemyState;
@@ -57,15 +57,10 @@ public class EnemyActions : MonoBehaviour
     public void AttackPlayer()
     {
         enemyState.IsWalking = false;
-
         meshAgent.SetDestination(transform.position);
-
         transform.LookAt(playerEvents.transform);
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && !alreadyAttacked)
+        if (!alreadyAttacked)
         {
             enemyState.IsAttacking = true;
             playerEvents.HandleDamage(enemyState.Damage);

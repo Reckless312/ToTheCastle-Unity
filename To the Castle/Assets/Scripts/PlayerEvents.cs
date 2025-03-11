@@ -51,6 +51,7 @@ public class PlayerEvents : MonoBehaviour
         {
             playerState.IsAlive = false;
             GetComponent<PlayerMovement>().enabled = false;
+            gameInput.enabled = false;
         }
     }
 
