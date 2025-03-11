@@ -26,4 +26,9 @@ public class EnemyEvents : MonoBehaviour
         if (playerInSightRange && !playerInAttackRange) enemyActions.ChasePlayer();
         if (playerInSightRange && playerInAttackRange) enemyActions.AttackPlayer();
     }
+
+    public void PlayerAttacked(float damage)
+    {
+        enemyActions.TakeDamage(damage);
+    }
 }

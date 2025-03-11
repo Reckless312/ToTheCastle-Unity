@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
 
 public class PlayerState : MonoBehaviour, IEntityState
 {
@@ -20,6 +21,9 @@ public class PlayerState : MonoBehaviour, IEntityState
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpCooldown = 1.2f;
     [SerializeField] private float attackCooldown = 2.2f;
+    [SerializeField] private float attackDamage = 30f;
+
+    private EnemyEvents enemyEvents;
 
     [Header("Player State")]
 
@@ -46,6 +50,8 @@ public class PlayerState : MonoBehaviour, IEntityState
     private void Start()
     {
         healthBar.SetMaxValue(maxHealth);
+
+        enemyEvents = DoNotDestroy.EnemyEvents;
     }
 
     private void Update()
@@ -96,6 +102,12 @@ public class PlayerState : MonoBehaviour, IEntityState
         private set => isAttacking = value;
     }
 
+    public float AttackDamage
+    {
+        get => attackDamage;
+        private set => attackDamage = value;
+    }
+
     public bool IsInAir()
     {
         if (isGrounded && isReadyToJump)
@@ -132,11 +144,15 @@ public class PlayerState : MonoBehaviour, IEntityState
         }
     }
 
-    public void HandleAttacking()
+    public void HandleAttacking(bool hitEnemy)
     {
         if (!isAttacking)
         {
             isAttacking = true;
+            if (hitEnemy)
+            {
+                enemyEvents.PlayerAttacked(AttackDamage);
+            }
             Invoke(nameof(ResetAttack), attackCooldown);
         }
     }

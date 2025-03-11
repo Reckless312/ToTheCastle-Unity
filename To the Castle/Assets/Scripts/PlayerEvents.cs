@@ -15,8 +15,6 @@ public class PlayerEvents : MonoBehaviour
 
     private PlayerState playerState;
 
-    [Header("Player State")]
-
     private Vector3 lastInteractDirection;
 
     private void Awake()
@@ -34,6 +32,7 @@ public class PlayerEvents : MonoBehaviour
 
     private void Update()
     {
+        UpdateLastDirection();
         UpdateOrientationBasedOnCamera();
         playerState.UpdateStateBasedOnInput(gameInput.GetMovementVectorNormalized());
     }
@@ -60,18 +59,20 @@ public class PlayerEvents : MonoBehaviour
 
     private void GameInput_OnAttackAction(object sender, System.EventArgs e)
     {
-        playerState.HandleAttacking();
+        float attackDistance = 1f;
+        bool hitEnemy = false;
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, attackDistance))
+        {
+            if (raycastHit.collider.CompareTag("Enemy"))
+            {
+                hitEnemy = true;
+            }
+        }
+        playerState.HandleAttacking(hitEnemy);
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
-    {
-        Vector3 directionVector = GetDirectionVector();
-
-        if (directionVector != Vector3.zero)
-        {
-            lastInteractDirection = directionVector;
-        }
-
+    { 
         float interactDistance = 2f;
         if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, gateLayerMask))
         {
@@ -92,5 +93,15 @@ public class PlayerEvents : MonoBehaviour
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 directionVector = orientation.forward * inputVector.y + orientation.right * inputVector.x;
         return directionVector;
+    }
+
+    public void UpdateLastDirection()
+    {
+        Vector3 directionVector = GetDirectionVector();
+
+        if (directionVector != Vector3.zero)
+        {
+            lastInteractDirection = directionVector;
+        }
     }
 }

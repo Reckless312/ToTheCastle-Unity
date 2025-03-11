@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class EnemyState : MonoBehaviour, IEntityState
 {
     [SerializeField] private float damage = 10f;
+    [SerializeField] private float health = 100f;
 
     private bool isWalking;
     private bool isRunning;
@@ -59,6 +60,12 @@ public class EnemyState : MonoBehaviour, IEntityState
     {
         get => damage;
         private set => damage = value;
+    }
+
+    public float Health
+    {
+        get => health;
+        set => health = value;
     }
 
     public bool IsInAir()

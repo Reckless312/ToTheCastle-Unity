@@ -79,4 +79,11 @@ public class EnemyActions : MonoBehaviour
         enemyState.IsAttacking = false;
         alreadyAttacked = false;
     }
+
+    public void TakeDamage(float damage)
+    {
+        Debug.Log("Enemy was hit" + enemyState.Health);
+        enemyState.Health = enemyState.Health - damage;
+        if(enemyState.Health <= 0) Destroy(gameObject);
+    }
 }

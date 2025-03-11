@@ -10,8 +10,9 @@ public class DoNotDestroy : MonoBehaviour
     const int GAME_INPUT_OBJECT_INDEX = 2;
     const int SCENE_CONTROLLER_OBJECT_INDEX = 3;
     const int CANVAS_OBJECT_INDEX = 4;
+    const int ENEMY_OBJECT_INDEX = 5;
 
-    //Last used index: 4;
+    //Last used index: 5;
     private static GameObject[] persistentObjects = new GameObject[10];
     private void Awake()
     {
@@ -63,6 +64,14 @@ public class DoNotDestroy : MonoBehaviour
         get
         {
             return persistentObjects[CANVAS_OBJECT_INDEX];
+        }
+    }
+
+    public static EnemyEvents EnemyEvents
+    {
+        get
+        {
+            return persistentObjects[ENEMY_OBJECT_INDEX].GetComponent<EnemyEvents>();
         }
     }
 }
