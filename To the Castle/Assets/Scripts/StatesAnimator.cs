@@ -7,6 +7,7 @@ public class StatesAnimator : MonoBehaviour
     private const string IS_IN_AIR = "IsInAir";
     private const string HAS_JUMPED = "HasJumped";
     private const string IS_ATTACKING = "IsAttacking";
+    private const string IS_ALIVE = "IsAlive";
 
     [SerializeField] private MonoBehaviour component;
 
@@ -30,5 +31,6 @@ public class StatesAnimator : MonoBehaviour
         animator.SetBool(IS_IN_AIR, IState.IsInAir());
         animator.SetBool(HAS_JUMPED, IState.HasJumped);
         animator.SetBool(IS_ATTACKING, IState.IsAttacking);
+        animator.SetBool(IS_ALIVE, IState.IsAlive);
     }
 }

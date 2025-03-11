@@ -11,6 +11,7 @@ public class EnemyState : MonoBehaviour, IEntityState
     private bool isJumping;
     private bool isGrounded;
     private bool isAttacking;
+    private bool isAlive;
     private bool hasJumped;
 
     private void Awake()
@@ -19,6 +20,7 @@ public class EnemyState : MonoBehaviour, IEntityState
         isJumping = false;
         isGrounded = true;
         hasJumped = false;
+        isAlive = true;
     }
 
     public bool IsWalking
@@ -66,6 +68,12 @@ public class EnemyState : MonoBehaviour, IEntityState
     {
         get => health;
         set => health = value;
+    }
+
+    public bool IsAlive
+    {
+        get => isAlive;
+        set => isAlive = value;
     }
 
     public bool IsInAir()

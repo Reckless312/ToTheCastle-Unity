@@ -12,6 +12,8 @@ public interface IEntityState
 
     public bool IsAttacking { get; }
 
+    public bool IsAlive { get; }
+
     public bool HasJumped { get; }
 
     public bool IsInAir();

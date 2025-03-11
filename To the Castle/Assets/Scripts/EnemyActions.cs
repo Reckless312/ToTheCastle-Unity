@@ -82,8 +82,12 @@ public class EnemyActions : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("Enemy was hit" + enemyState.Health);
-        enemyState.Health = enemyState.Health - damage;
-        if(enemyState.Health <= 0) Destroy(gameObject);
+        enemyState.Health -= damage;
+        if(enemyState.Health <= 0)
+        {
+            enemyState.IsAlive = false;
+            GetComponent<EnemyEvents>().enabled = false;
+        }
+        Debug.Log("Enemy Health: " + enemyState.Health);
     }
 }

@@ -44,7 +44,14 @@ public class PlayerEvents : MonoBehaviour
 
     public void HandleDamage(float damage)
     {
-        playerState.WasHit(damage);
+        playerState.CurrentHealth -= damage;
+        playerState.UpdateHealthBar();
+
+        if(playerState.CurrentHealth <= 0)
+        {
+            playerState.IsAlive = false;
+            GetComponent<PlayerMovement>().enabled = false;
+        }
     }
 
     private void GameInput_OnRunAction(object sender, System.EventArgs e)
@@ -60,8 +67,10 @@ public class PlayerEvents : MonoBehaviour
     private void GameInput_OnAttackAction(object sender, System.EventArgs e)
     {
         float attackDistance = 1f;
+        float sphereRadius = 0.5f;
         bool hitEnemy = false;
-        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, attackDistance))
+
+        if (Physics.SphereCast(transform.position, sphereRadius, lastInteractDirection, out RaycastHit raycastHit, attackDistance))
         {
             if (raycastHit.collider.CompareTag("Enemy"))
             {

@@ -35,6 +35,7 @@ public class PlayerState : MonoBehaviour, IEntityState
     private bool isInAir;
     private bool isReadyToJump;
     private bool isAttacking;
+    private bool isAlive;
 
     private float currentHealth;
 
@@ -44,6 +45,7 @@ public class PlayerState : MonoBehaviour, IEntityState
         entityRigidBody.EntitySpeed = moveSpeed;
 
         isReadyToJump = true;
+        isAlive = true;
         currentHealth = maxHealth;
     }
 
@@ -106,6 +108,18 @@ public class PlayerState : MonoBehaviour, IEntityState
     {
         get => attackDamage;
         private set => attackDamage = value;
+    }
+
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set => currentHealth = value;
+    }
+
+    public bool IsAlive
+    {
+        get => isAlive;
+        set => isAlive = value;
     }
 
     public bool IsInAir()
@@ -173,9 +187,8 @@ public class PlayerState : MonoBehaviour, IEntityState
         playerCurrentAnimator.runtimeAnimatorController = indexScene == 0 ? exploringAnimatorController : combatAnimatorController;
     }
 
-    public void WasHit(float damage)
+    public void UpdateHealthBar()
     {
-        currentHealth -= damage;
         healthBar.SetSliderValue(currentHealth);
     }
 }
