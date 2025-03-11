@@ -3,13 +3,13 @@ using UnityEngine.AI;
 
 public class EnemyActions : MonoBehaviour
 {
-    [SerializeField] private Transform player;
     [SerializeField] private NavMeshAgent meshAgent;
     [SerializeField] private LayerMask whatIsGround;
 
     [SerializeField] private float walkPointRange = 5;
     [SerializeField] private float timeBetweenAttacks = 0.5f;
 
+    private Transform player;
     private EnemyState enemyState;
 
     public Vector3 walkPoint;
@@ -21,6 +21,8 @@ public class EnemyActions : MonoBehaviour
     {
         meshAgent = GetComponent<NavMeshAgent>();
         enemyState = GetComponent<EnemyState>();
+
+        player = DoNotDestroy.PlayerEvents.transform;
     }
 
     public void SearchWalkPoint()
