@@ -7,9 +7,9 @@ public class EnemyActions : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
 
     [SerializeField] private float walkPointRange = 5;
-    [SerializeField] private float timeBetweenAttacks = 0.5f;
+    [SerializeField] private float timeBetweenAttacks = 2.0f;
 
-    private Transform player;
+    private PlayerEvents playerEvents;
     private EnemyState enemyState;
 
     public Vector3 walkPoint;
@@ -22,7 +22,7 @@ public class EnemyActions : MonoBehaviour
         meshAgent = GetComponent<NavMeshAgent>();
         enemyState = GetComponent<EnemyState>();
 
-        player = DoNotDestroy.PlayerEvents.transform;
+        playerEvents = DoNotDestroy.PlayerEvents;
     }
 
     public void SearchWalkPoint()
@@ -50,7 +50,7 @@ public class EnemyActions : MonoBehaviour
 
     public void ChasePlayer()
     {
-        meshAgent.SetDestination(player.position);
+        meshAgent.SetDestination(playerEvents.transform.position);
         enemyState.IsWalking = true;
     }
 
@@ -60,10 +60,15 @@ public class EnemyActions : MonoBehaviour
 
         meshAgent.SetDestination(transform.position);
 
-        transform.LookAt(player);
+        transform.LookAt(playerEvents.transform);
+    }
 
-        if (!alreadyAttacked)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !alreadyAttacked)
         {
+            enemyState.IsAttacking = true;
+            playerEvents.HandleDamage(enemyState.Damage);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
@@ -71,6 +76,7 @@ public class EnemyActions : MonoBehaviour
 
     private void ResetAttack()
     {
+        enemyState.IsAttacking = false;
         alreadyAttacked = false;
     }
 }

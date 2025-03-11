@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 public class EnemyState : MonoBehaviour, IEntityState
 {
+    [SerializeField] private float damage = 10f;
+
     private bool isWalking;
     private bool isRunning;
     private bool isJumping;
@@ -51,6 +53,12 @@ public class EnemyState : MonoBehaviour, IEntityState
     {
         get => hasJumped;
         private set => hasJumped = value;
+    }
+
+    public float Damage
+    {
+        get => damage;
+        private set => damage = value;
     }
 
     public bool IsInAir()

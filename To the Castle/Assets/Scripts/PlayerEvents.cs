@@ -43,6 +43,11 @@ public class PlayerEvents : MonoBehaviour
         playerState.ChangeAnimatorController(indexScene);
     }
 
+    public void HandleDamage(float damage)
+    {
+        playerState.WasHit(damage);
+    }
+
     private void GameInput_OnRunAction(object sender, System.EventArgs e)
     {
         playerState.HandleRunningStateChange();

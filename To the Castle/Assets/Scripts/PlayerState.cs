@@ -156,4 +156,10 @@ public class PlayerState : MonoBehaviour, IEntityState
     {
         playerCurrentAnimator.runtimeAnimatorController = indexScene == 0 ? exploringAnimatorController : combatAnimatorController;
     }
+
+    public void WasHit(float damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetSliderValue(currentHealth);
+    }
 }
