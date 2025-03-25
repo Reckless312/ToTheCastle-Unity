@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Playables;
-using UnityEngine.Rendering;
 
 public class PlayerState : MonoBehaviour, IEntityState
 {
